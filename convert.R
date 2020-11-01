@@ -1,9 +1,10 @@
 library(data.table)
-library(openxlsx)
+library(googlesheets4)
+
 
 load(file='dataJson.rdata')
 
-MapTable <- as.data.table(read.xlsx('ID2ChineseMappingTable.xlsx',sheet = 1))
+MapTable <- as.data.table(read_sheet("1IFXu-ybDMz5asDhDRFljB6ziE6WtPRzw9W9hodvnqLE"))
 MapTable[, id := as.character(id)]
 
 # set reference column for faster indexing
