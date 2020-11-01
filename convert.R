@@ -16,7 +16,7 @@ DT <- merge(DT, MapTable, all.x = TRUE, all.y = FALSE, by = 'id')
 # if new text exist, replace old text
 DT[!is.na(newText), text := newText]
 # clean up columns
-DT[, c('origText', 'newText'):=NULL]
+DT <- DT[,.(id, text)]
 
 DT <- DT[names(dataJson)]
 outputList <- as.list(DT$text)
