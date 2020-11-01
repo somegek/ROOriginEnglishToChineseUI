@@ -22,4 +22,4 @@ outputList <- as.list(DT$text)
 names(outputList) <- names(dataJson)
 
 dataString <- RJSONIO::toJSON(outputList, collapse = "")
-write(dataString, "ModifiedEN_generatedbyR.json")
+write(dataString, "ModifiedEN")
