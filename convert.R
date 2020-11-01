@@ -1,11 +1,15 @@
 library(data.table)
 library(googlesheets4)
-Sys.setlocale(category="LC_ALL", locale = "English_United States.1252")
+library(jsonlite)
+library(stringi)
+# Sys.setlocale(category="LC_ALL", locale = "English_United States.1252")
 
 load(file='dataJson.rdata')
 
 MapTable <- as.data.table(read_sheet("1IFXu-ybDMz5asDhDRFljB6ziE6WtPRzw9W9hodvnqLE"))
 MapTable[, id := as.character(id)]
+# MapTable[, newText := stri_escape_unicode(newText)]
+MapTable <- MapTable[!is.na(id)]
 
 # set reference column for faster indexing
 setkey(MapTable, id)
