@@ -19,4 +19,7 @@ for(curId in MapTable$id){
   rawString <- `stri_sub<-`(rawString, startPos, endPos, value=unlist(MapTable[id==curId,utf16string]))
 }
 
+endString <- ",\"696473873\":\" \"}"
+rawString <- `stri_sub<-`(rawString,nchar(rawString)-1, nchar(rawString), value = endString)
+
 write(rawString, "ModifiedEN")
