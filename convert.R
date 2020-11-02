@@ -22,3 +22,6 @@ endString <- ",\"696473873\":\" \"}"
 rawString <- `stri_sub<-`(rawString,nchar(rawString), nchar(rawString), value = endString)
 
 write(rawString, "ModifiedEN")
+
+git2r::commit(message='0', all = TRUE)
+
