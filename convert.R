@@ -1,6 +1,7 @@
 library(data.table)
 library(googlesheets4)
 library(stringi)
+library(git2r)
 
 load(file='rawString.rdata')
 
@@ -23,5 +24,7 @@ rawString <- `stri_sub<-`(rawString,nchar(rawString), nchar(rawString), value = 
 
 write(rawString, "ModifiedEN")
 
+repo <- git2r::init()
 git2r::commit(message='0', all = TRUE)
-
+git2r::config(repo, user.name = "Alice", user.email = "alice@example.org")
+git2r::push()
