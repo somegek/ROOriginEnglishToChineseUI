@@ -1,27 +1,22 @@
 library(data.table)
 library(googlesheets4)
-# Sys.setlocale(category="LC_ALL", locale = "English_United States.1252")
+library(stringi)
 
-load(file='dataJson.rdata')
+load(file='rawString.rdata')
 
 MapTable <- as.data.table(read_sheet("1IFXu-ybDMz5asDhDRFljB6ziE6WtPRzw9W9hodvnqLE"))
 MapTable[, id := as.character(id)]
-MapTable <- MapTable[!is.na(id), .(id, newText)]
+MapTable <- MapTable[!is.na(id), .(id, utf16string)]
 
-# set reference column for faster indexing
-setkey(MapTable, id)
-setkey(DT, id)
+for(curId in MapTable$id[1:20]){
+  # curId <- '28976' # example
+  location <- stri_locate_all(pattern=paste0('\"',curId,'\":\"'), rawString, fixed = TRUE)[[1]]
+  startPos <- unname(location[1,2]+1)
+  endLocations <- stri_locate_all(pattern=paste0('\",\"'), rawString, fixed = TRUE)[[1]][,1]
+  endPos <- unlist(endLocations[which(endLocations>startPos)[1]]-1)
+  print(substr(rawString, startPos, endPos))
+  rawString <- `stri_sub<-`(rawString, startPos, endPos, value=unlist(MapTable[id==curId,utf16string]))
+  print(unlist(MapTable[id==curId,utf16string]))
+}
 
-# left join base on id
-DT <- merge(DT, MapTable, all.x = TRUE, all.y = FALSE, by = 'id')
-# if new text exist, replace old text
-DT[!is.na(newText), text := newText]
-# clean up columns
-DT <- DT[,.(id, text)]
-
-DT <- DT[names(dataJson)]
-outputList <- as.list(DT$text)
-names(outputList) <- names(dataJson)
-
-dataString <- RJSONIO::toJSON(outputList, collapse = '')
-write(dataString, "ModifiedEN")
+write(rawString, "ModifiedEN")
