@@ -20,6 +20,6 @@ for(curId in MapTable$id){
 }
 
 endString <- ",\"696473873\":\" \"}"
-rawString <- `stri_sub<-`(rawString,nchar(rawString)-1, nchar(rawString), value = endString)
+rawString <- `stri_sub<-`(rawString,nchar(rawString), nchar(rawString), value = endString)
 
 write(rawString, "ModifiedEN")
