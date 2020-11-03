@@ -7,7 +7,7 @@ load(file='rawString.rdata')
 
 MapTable <- as.data.table(read_sheet("1IFXu-ybDMz5asDhDRFljB6ziE6WtPRzw9W9hodvnqLE"))
 MapTable[, id := as.character(id)]
-MapTable <- MapTable[!is.na(id), .(id, utf16string)]
+MapTable <- MapTable[!is.na(id) & !is.na(utf16string), .(id, utf16string)]
 
 for(curId in MapTable$id){
   # curId <- '28976' # example
@@ -24,7 +24,7 @@ rawString <- `stri_sub<-`(rawString,nchar(rawString), nchar(rawString), value = 
 
 write(rawString, "ModifiedEN")
 
-repo <- git2r::init()
-git2r::commit(message='0', all = TRUE)
-git2r::config(repo, user.name = "Alice", user.email = "Alice@example.com")
-git2r::push()
+# repo <- git2r::init()
+# git2r::commit(message='0', all = TRUE)
+# git2r::config(repo, user.name = "Alice", user.email = "Alice@example.com")
+# git2r::push()
