@@ -10,7 +10,7 @@ MapTable <- MapTable[!is.na(id) & !is.na(utf16string), .(id, utf16string)]
 
 for(curId in MapTable$id){
   # curId <- '28976' # example
-  location <- stri_locate_all(pattern=paste0('\"',curId,'\":\"'), rawString, fixed = TRUE)[[1]]
+  location <- stri_locate_all_fixed(pattern=paste0('\"',curId,'\":\"'), rawString)[[1]]
   startPos <- unname(location[1,2]+1)
   endLocations <- stri_locate_all(pattern=paste0('\",\"'), rawString, fixed = TRUE)[[1]][,1]
   endPos <- unlist(endLocations[which(endLocations>startPos)[1]]-1)
