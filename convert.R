@@ -1,3 +1,7 @@
+if(Sys.info()[['user']]=='arwin'){
+  source('C:/Users/arwin/Desktop/RO/ROOriginEnglishToChineseUI/changeLibPath.R', echo=FALSE)
+}
+
 library(data.table)
 library(googlesheets4)
 library(stringi)
