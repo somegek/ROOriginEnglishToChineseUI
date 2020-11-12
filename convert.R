@@ -20,7 +20,7 @@ for(curId in MapTable$id){
   # curId <- '28976' # example
   location <- stri_locate_all_fixed(pattern=paste0('\"',curId,'\":\"'), rawString)[[1]]
   startPos <- unname(location[1,2]+1)
-  endLocations <- stri_locate_all(pattern=paste0('\",\"'), rawString, fixed = TRUE)[[1]][,1]
+  endLocations <- stri_locate_all_fixed(pattern='\",\"', rawString)[[1]][,1]
   endPos <- unlist(endLocations[which(endLocations>startPos)[1]]-1)
   print(substr(rawString, startPos, endPos))
   rawString <- `stri_sub<-`(rawString, startPos, endPos, value=unlist(MapTable[id==curId,utf16string]))
@@ -31,6 +31,8 @@ rawString <- `stri_sub<-`(rawString,nchar(rawString), nchar(rawString), value = 
 
 write(rawString, "ModifiedEN")
 
+rawString <- stri_replace_all_fixed(rawString, '\",\"', '\",\n\"')
+write(rawString, "ModifiedEN.txt")
 
 git2r::commit(message='0', all = TRUE)
 # git2r::config(repo, user.name = "Alice", user.email = "Alice@example.com")
