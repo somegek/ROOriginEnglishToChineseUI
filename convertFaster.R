@@ -51,7 +51,10 @@ json <- stri_replace_all_fixed(json, "\\\\/","\\/")
 json <- gsub("<U\\+(....)>", "\\\\u\\1", json)
 
 Encoding(json) <- "bytes"
-writeLines(json, "jsonEN")
+writeLines(json, "ModifiedEN")
+
+rawString <- stri_replace_all_fixed(rawString, '\",\"', '\",\n\"')
+write(rawString, "ModifiedEN.txt")
 
 git2r::commit(message='0', all = TRUE)
 # git2r::config(repo, user.name = "Alice", user.email = "Alice@example.com")
