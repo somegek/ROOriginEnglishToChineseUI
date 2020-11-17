@@ -34,17 +34,6 @@ setorder(NewTable, id)
 
 pb <- progress_bar$new(format = "  downloading [:bar] :percent eta: :eta", total = nrow(NewTable))
 
-
-# for(curId in rowId){
-#   NewTable[id==curId,utf16string := stri_replace_all_fixed(unlist(NewTable[id==curId]$utf16string), '\"', '\\"')]
-#   
-#   location <- stri_locate_all_fixed(pattern=paste0('\"',curId,'\":\"'), rawString)[[1]]
-#   startPos <- unname(location[1,2]+1)
-#   endLocations <- stri_locate_all_fixed(pattern='\",\"', rawString)[[1]][,1]
-#   endPos <- unlist(endLocations[which(endLocations>startPos)[1]]-1)
-#   rawString <- `stri_sub<-`(rawString, startPos, endPos, value=unlist(NewTable[id==curId,utf16string]))
-# }
-
 for(curId in NewTable$id){
   pb$tick()
   # curId <- '238733201' # example
@@ -52,12 +41,10 @@ for(curId in NewTable$id){
   startPos <- unname(location[1,2]+1)
   endLocations <- stri_locate_all_fixed(pattern='\",\"', rawString)[[1]][,1]
   endPos <- unlist(endLocations[which(endLocations>startPos)[1]]-1)
-  # print(substr(rawString, startPos, endPos))
   rawString <- `stri_sub<-`(rawString, startPos, endPos, value=unlist(NewTable[id==curId,utf16string]))
 }
-# save(rawString, file='modifiedString.RData')
-
 rawString <- stri_replace_all_fixed(rawString, '\n','\\n')
+# save(rawString, file='modifiedString.RData')
 
 write(rawString, "ModifiedEN")
 
