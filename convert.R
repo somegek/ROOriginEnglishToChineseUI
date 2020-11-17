@@ -5,7 +5,7 @@ if(Sys.info()[['user']]=='arwin'){
 library(data.table)
 library(googlesheets4)
 library(stringi)
-
+library(progress)
 library(git2r)
 repo <- git2r::init()
 git2r::pull()
@@ -31,12 +31,23 @@ NewTable[!is.na(utf16string.y), utf16string.x :=utf16string.y]
 NewTable[, utf16string.y:=NULL]
 setnames(NewTable, "utf16string.x","utf16string")
 setorder(NewTable, id)
-nTotal <- nrow(NewTable)
-pos <- 0
+
+pb <- progress_bar$new(format = "  downloading [:bar] :percent eta: :eta", total = nrow(NewTable))
+
+
+# for(curId in rowId){
+#   NewTable[id==curId,utf16string := stri_replace_all_fixed(unlist(NewTable[id==curId]$utf16string), '\"', '\\"')]
+#   
+#   location <- stri_locate_all_fixed(pattern=paste0('\"',curId,'\":\"'), rawString)[[1]]
+#   startPos <- unname(location[1,2]+1)
+#   endLocations <- stri_locate_all_fixed(pattern='\",\"', rawString)[[1]][,1]
+#   endPos <- unlist(endLocations[which(endLocations>startPos)[1]]-1)
+#   rawString <- `stri_sub<-`(rawString, startPos, endPos, value=unlist(NewTable[id==curId,utf16string]))
+# }
+
 for(curId in NewTable$id){
-  pos <- pos+1
-  print(round(pos/nTotal,2))
-  # curId <- '4265649338' # example
+  pb$tick()
+  # curId <- '238733201' # example
   location <- stri_locate_all_fixed(pattern=paste0('\"',curId,'\":\"'), rawString)[[1]]
   startPos <- unname(location[1,2]+1)
   endLocations <- stri_locate_all_fixed(pattern='\",\"', rawString)[[1]][,1]
@@ -44,6 +55,9 @@ for(curId in NewTable$id){
   # print(substr(rawString, startPos, endPos))
   rawString <- `stri_sub<-`(rawString, startPos, endPos, value=unlist(NewTable[id==curId,utf16string]))
 }
+# save(rawString, file='modifiedString.RData')
+
+rawString <- stri_replace_all_fixed(rawString, '\n','\\n')
 
 write(rawString, "ModifiedEN")
 
