@@ -48,10 +48,11 @@ json <- jsonlite::toJSON(namedList,auto_unbox = TRUE)
 json <- stri_replace_all_fixed(json, '\n','\\n')
 json <- stri_replace_all_fixed(json, '\\\\u','\\u')
 json <- stri_replace_all_fixed(json, "\\\\/","\\/")
-json <- gsub("<U\\+(....)>", "\\\\\\u\\1", json)
+json <- gsub("<U\\+(....)>", "\\\\u\\1", json)
 # save(rawString, file='modifiedString.RData')
 
-write(json, "jsonEN")
+Encoding(json) <- "bytes"
+writeLines(json, "jsonEN")
 
 rawString <- stri_replace_all_fixed(rawString, '\",\"', '\",\n\"')
 write(rawString, "ModifiedEN.txt")
