@@ -46,23 +46,24 @@ names(namedList) <- DT$KoId
 json <- jsonlite::toJSON(namedList,auto_unbox = TRUE)
 json <- gsub("<U\\+(....)>", "\\\\u\\1", json)
 json <- stri_replace_all_fixed(json, '\n','\\n')
+json <- stri_replace_all_fixed(json, '\\b','\b')
 json <- stri_replace_all_fixed(json, '\\\\n','\\n')
 json <- stri_replace_all_fixed(json, '\\\\u','\\u')
 json <- stri_replace_all_fixed(json, '\\\\\\\"','\\\"')
 json <- stri_replace_all_fixed(json, "\\\\/","\\/")
 
-curId <- '682463344' # example
-location <- stri_locate_all_fixed(pattern=paste0('\"',curId,'\":\"'), json)[[1]]
-startPos <- unname(location[1,2]+1)
-endLocations <- stri_locate_all_fixed(pattern='\",\"', json)[[1]][,1]
-endPos <- unlist(endLocations[which(endLocations>startPos)[1]]-1)
-print(substr(json, startPos, endPos))
+# curId <- '682463344' # example
+# location <- stri_locate_all_fixed(pattern=paste0('\"',curId,'\":\"'), json)[[1]]
+# startPos <- unname(location[1,2]+1)
+# endLocations <- stri_locate_all_fixed(pattern='\",\"', json)[[1]][,1]
+# endPos <- unlist(endLocations[which(endLocations>startPos)[1]]-1)
+# cat(substr(json, startPos, endPos))
 
-# Encoding(json) <- "bytes"
+Encoding(json) <- "bytes"
 writeLines(json, "ModifiedEN")
 
-rawString <- stri_replace_all_fixed(rawString, '\",\"', '\",\n\"')
-write(rawString, "ModifiedEN.txt")
+# rawString <- stri_replace_all_fixed(rawString, '\",\"', '\",\n\"')
+# write(rawString, "ModifiedEN.txt")
 
 git2r::commit(message='0', all = TRUE)
 # git2r::config(repo, user.name = "Alice", user.email = "Alice@example.com")
