@@ -44,14 +44,14 @@ namedList <- as.list(DT$json)
 names(namedList) <- DT$KoId
 
 json <- jsonlite::toJSON(namedList,auto_unbox = TRUE)
-json <- gsub("<U\\+(....)>", "\\u\\1", json)
+json <- gsub("<U\\+(....)>", "\\\\u\\1", json)
 json <- stri_replace_all_fixed(json, '\n','\\n')
 json <- stri_replace_all_fixed(json, '\\\\n','\\n')
 json <- stri_replace_all_fixed(json, '\\\\u','\\u')
 json <- stri_replace_all_fixed(json, '\\\\\\\"','\\\"')
 json <- stri_replace_all_fixed(json, "\\\\/","\\/")
 
-curId <- '900091176' # example
+curId <- '682463344' # example
 location <- stri_locate_all_fixed(pattern=paste0('\"',curId,'\":\"'), json)[[1]]
 startPos <- unname(location[1,2]+1)
 endLocations <- stri_locate_all_fixed(pattern='\",\"', json)[[1]][,1]
