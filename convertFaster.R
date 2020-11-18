@@ -40,7 +40,6 @@ DT <- merge(DT,NewTable, by.x = 'KoId', by.y = 'id',all.x = TRUE, sort = TRUE)
 DT[!is.na(utf16string), json:=utf16string]
 DT[,utf16string:=NULL]
 DT[KoId=='2802078031', json:="Rescue Debirucci with Guild One! \\\ \\u0669( \\u141B )\\u0648 \\/ Please check the adventurer's mail!"]
-DT <- DT[KoId!='0']
 namedList <- as.list(DT$json)
 names(namedList) <- DT$KoId
 
@@ -49,9 +48,10 @@ json <- gsub("<U\\+(....)>", "\\u\\1", json)
 json <- stri_replace_all_fixed(json, '\n','\\n')
 json <- stri_replace_all_fixed(json, '\\\\n','\\n')
 json <- stri_replace_all_fixed(json, '\\\\u','\\u')
+json <- stri_replace_all_fixed(json, '\\\\\\\"','\\\"')
 json <- stri_replace_all_fixed(json, "\\\\/","\\/")
 
-curId <- '784044' # example
+curId <- '900091176' # example
 location <- stri_locate_all_fixed(pattern=paste0('\"',curId,'\":\"'), json)[[1]]
 startPos <- unname(location[1,2]+1)
 endLocations <- stri_locate_all_fixed(pattern='\",\"', json)[[1]][,1]
