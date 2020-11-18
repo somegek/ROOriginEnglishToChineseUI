@@ -36,7 +36,7 @@ pb <- progress_bar$new(format = "  downloading [:bar] :percent eta: :eta", total
 
 for(curId in NewTable$id){
   pb$tick()
-  # curId <- '238733201' # example
+  # curId <- '3364070197' # example
   location <- stri_locate_all_fixed(pattern=paste0('\"',curId,'\":\"'), rawString)[[1]]
   startPos <- unname(location[1,2]+1)
   endLocations <- stri_locate_all_fixed(pattern='\",\"', rawString)[[1]][,1]

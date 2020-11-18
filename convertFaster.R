@@ -45,12 +45,20 @@ namedList <- as.list(DT$json)
 names(namedList) <- DT$KoId
 
 json <- jsonlite::toJSON(namedList,auto_unbox = TRUE)
-json <- gsub("<U\\+(....)>", "\\\\u\\1", json)
+json <- gsub("<U\\+(....)>", "\\u\\1", json)
 json <- stri_replace_all_fixed(json, '\n','\\n')
+json <- stri_replace_all_fixed(json, '\\\\n','\\n')
 json <- stri_replace_all_fixed(json, '\\\\u','\\u')
 json <- stri_replace_all_fixed(json, "\\\\/","\\/")
 
-Encoding(json) <- "bytes"
+curId <- '784044' # example
+location <- stri_locate_all_fixed(pattern=paste0('\"',curId,'\":\"'), json)[[1]]
+startPos <- unname(location[1,2]+1)
+endLocations <- stri_locate_all_fixed(pattern='\",\"', json)[[1]][,1]
+endPos <- unlist(endLocations[which(endLocations>startPos)[1]]-1)
+print(substr(json, startPos, endPos))
+
+# Encoding(json) <- "bytes"
 writeLines(json, "ModifiedEN")
 
 rawString <- stri_replace_all_fixed(rawString, '\",\"', '\",\n\"')
