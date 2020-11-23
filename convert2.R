@@ -15,6 +15,7 @@ load(file='rawString.rdata')
 
 endString <- ",\"696473873\":\" \"}"
 rawString <- `stri_sub<-`(rawString,nchar(rawString), nchar(rawString), value = endString)
+rawString <- substr(rawString, 2, nchar(rawString)-1)
 
 KoId <- names(jsonlite::fromJSON(rawString))
 
@@ -32,21 +33,33 @@ NewTable[, utf16string.y:=NULL]
 setnames(NewTable, "utf16string.x","utf16string")
 setorder(NewTable, id)
 
-pb <- progress_bar$new(format = "  replacing [:bar] :percent eta: :eta", total = nrow(NewTable))
+curId <- '3364070197' # example
+stringVec <- strsplit(rawString,'\",\"',fixed = TRUE)[[1]]
+stringList <- lapply(stringVec, function(x){
+  x <- strsplit(x, '\":\"', fixed = TRUE)[[1]]
+  return(x)
+})
+stringList[[6]] <- c('12289', ',')
+stringId <- unlist(lapply(stringList, function(x){
+  return(x[[1]])
+}))
 
-for(curId in NewTable$id){
-  pb$tick()
-  # curId <- '3364070197' # example
-  location <- stri_locate_all_fixed(pattern=paste0('\"',curId,'\":\"'), rawString)[[1]]
-  startPos <- unname(location[1,2]+1)
-  endLocations <- stri_locate_all_fixed(pattern='\",\"', rawString)[[1]][,1]
-  endPos <- unlist(endLocations[which(endLocations>startPos)[1]]-1)
-  rawString <- `stri_sub<-`(rawString, startPos, endPos, value=unlist(NewTable[id==curId,utf16string]))
-}
-rawString <- stri_replace_all_fixed(rawString, '\n','\\n')
+stringList <- stringList[which(!stringId %in% NewTable$id)]
+
+NewList <- as.list(transpose(NewTable))
+stringList <- c(stringList,NewList)
+
+stringVec <- lapply(stringList, function(x){
+  return(paste0(x[1], '\":\"', x[2]))
+})
+
+rawString2 <- paste0(stringVec, collapse = '\",\"')
+rawString2 <- paste0("{", rawString2, "}")
+
+# rawString <- stri_replace_all_fixed(rawString, '\n','\\n')
 # save(rawString, file='modifiedString.RData')
 
-# write(rawString, "ModifiedEN")
+write(rawString, "ModifiedEN")
 
 # rawString <- stri_replace_all_fixed(rawString, '\",\"', '\",\n\"')
 write(rawString, "ModifiedEN.txt")
