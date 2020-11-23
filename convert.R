@@ -32,7 +32,7 @@ NewTable[, utf16string.y:=NULL]
 setnames(NewTable, "utf16string.x","utf16string")
 setorder(NewTable, id)
 
-pb <- progress_bar$new(format = "  downloading [:bar] :percent eta: :eta", total = nrow(NewTable))
+pb <- progress_bar$new(format = "  replacing [:bar] :percent eta: :eta", total = nrow(NewTable))
 
 for(curId in NewTable$id){
   pb$tick()
