@@ -25,7 +25,7 @@ stringList[[7]] <- c('19968', 'Monday')
 stringId <- unlist(lapply(stringList, function(x){
   return(x[[1]])
 }))
-
+options(gargle_oauth_email = TRUE)
 ChTable <- as.data.table(read_sheet("1zbRXgH4_XHXNLBqMakUkJ1gq6mAnSMiMunfgiWY-MIw"))
 ChTable[, id := as.numeric(id)]
 ChTable <- ChTable[id %in% stringId,.(id,utf16string)]
