@@ -22,6 +22,8 @@ stringList <- lapply(stringVec, function(x){
 })
 stringList[[6]] <- c('12289', ',')
 stringList[[7]] <- c('19968', 'Monday')
+'4279364896'
+browser()
 stringId <- unlist(lapply(stringList, function(x){
   return(x[[1]])
 }))
